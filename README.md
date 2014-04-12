@@ -8,3 +8,5 @@ Más información: http://publicacion.sejas.es
 
 
 
+== Shortcodes ==
+[pcer_mis_documentos]

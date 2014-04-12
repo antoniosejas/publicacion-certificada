@@ -4,11 +4,26 @@ Class PCER {
     const my_prefix = "pc_";
     const version = "1.0";
     const version_slug = "pcer_version";
+    const paginas_slug = "pcer_paginas";
 
     private static function prefix()
     {
         global $wpdb;
         return $wpdb->prefix .self::my_prefix;
+    }
+    /**
+     * Devuelve el directorio absoluto del plugin.
+     */
+    public static function directory()
+    {
+      return dirname(__FILE__).'/';
+    }
+    /**
+     * Devuelve el path absoluto hasta la carpeta views del plugin
+     */
+    public static function views()
+    {
+      return dirname(__FILE__).'/views/';
     }
     public static function tablaDocumentos()
     {
@@ -31,6 +46,7 @@ Class PCER {
      * 
      */
     public static function pcer_install () {
+      // Creamos/Actualizamos la base de datos
        $table_name = self::tablaDocumentos();
        $sql = "CREATE TABLE " . $table_name . " (
                id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -53,8 +69,37 @@ Class PCER {
 
        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
        $debug=dbDelta( $sql );
-       var_dump($debug);
        self::registrarVersion();
+
+
+       // Creamos si no existen las páginas de mis_documentos, publicar_documento
+       $paginasPost = get_option(self::paginas_slug,array());
+       var_dump($paginasPost);
+       die();
+       $paginas = array('Mis Documentos' => 'mis_documentos', 'Subir Documento' => 'subir_documento');
+
+       foreach ($paginas as $titulo => $unaPagina) {
+         if (!isset($paginasPost[$unaPagina])) {
+            // Create post object
+            $my_post = array(
+              'post_title'    => $titulo,
+              'post_content'  => "[pcer_$unaPagina]",
+              'post_type'  => 'page',
+              'post_status'   => 'publish',
+              'post_author'   => 1
+            );
+            // Insert the post into the database
+            $paginasPost[$unaPagina] = wp_insert_post( $my_post , $error);
+            var_dump($error);
+            var_dump($paginasPost);
+         }// end if no existe mis documentos
+       }//end Foreach
+       
+       // Guardamos id's de las páginas del plugin.
+       $debug = update_option(self::paginas_slug, $paginasPost);
+       var_dump('self::paginas_slug',self::paginas_slug);
+       var_dump($debug);
+
     }
     /**
      * 
@@ -67,7 +112,15 @@ Class PCER {
     /**
      * 
      */
+    public static function loaded() {
+        // Chequeamos si la versión de la base de datos es la misma versión.
+        self::pcer_update_db_check();
 
+        // Incluimos todos los shortcodes
+        // Para ver los shortcodes públicos, ver README.md
+        SEJAS_AUX::includeAll("shortcodes");
+
+    }
 }
 
 
