@@ -3,25 +3,19 @@
     <li id="li_1" >
             <label class="description" for="element_1">Nombre del documento: {{Error_r_nombre}} </label>
             <span>
-                <input id="nombre" name= "r_nombre" class="element text" maxlength="255" size="8" value="{{r_nombre}}"/>
+                <input id="nombre" name= "r_nombre" class="element text" maxlength="255" size="8" value="{{r_nombre}}" required/>
             </span>
         </li>
-        <!--li id="li_2" >
-            <label class="description" for="element_2">Email: {{Error_r_email}} </label>
-            <div>
-                <input id="email" name="r_email" class="element text medium" type="text" maxlength="255" value="{{r_email}}"/> 
-            </div> 
-        </li!-->
         <li id="li_3" >
             <label class="description" for="element_3">Home: {{Error_r_home}}</label>
             <div>
-                <input id="home" name="r_home" class="element text medium" type="text" maxlength="255" value="{{r_home}}" placeholder = "http://"/> 
+                <input id="home" name="r_home" class="element text medium" type="text" maxlength="255" value="{{r_home}}" placeholder = "http://" required/>
             </div> 
         </li>       
         <li id="li_3" >
             <label class="description" for="element_3">Documento: {{Error_r_web_documento}}</label>
             <div>
-                <input id="documento" name="r_web_documento" class="element text medium" type="text" maxlength="255" value="{{r_web_documento}}" placeholder = "http://"/> 
+                <input id="documento" name="r_web_documento" class="element text medium" type="text" maxlength="255" value="{{r_web_documento}}" placeholder = "http://" required/>
             </div> 
         </li>           
         <li class="buttons">

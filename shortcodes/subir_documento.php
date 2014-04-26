@@ -64,7 +64,6 @@ function pcer_short_subir_documento ($atts, $content = null)
         }//end if; Nos llaman de otro formulario que no es el nuestro, ya que falta el input hidden name token; o el navegador no soporta cookies
     }//end if metodo get
 
-
      return $resultado;
 }
 add_shortcode('pcer_'.basename(__FILE__,".php"), 'pcer_short_'.basename(__FILE__,".php"));  
@@ -120,6 +119,7 @@ function display_form($errores,$clean){
     $tpl = PCER::views().'shortcodes/subir_documento';
 
     return SEJAS_AUX::parse($tpl,$placeholders);
+
 }//end function display_form;
 
 // AUX COPIAR DOCUMENTO

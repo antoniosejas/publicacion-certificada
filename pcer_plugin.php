@@ -74,32 +74,27 @@ Class PCER {
 
        // Creamos si no existen las páginas de mis_documentos, publicar_documento
        $paginasPost = get_option(self::paginas_slug,array());
-       var_dump($paginasPost);
-       die();
+
        $paginas = array('Mis Documentos' => 'mis_documentos', 'Subir Documento' => 'subir_documento');
 
        foreach ($paginas as $titulo => $unaPagina) {
-         if (!isset($paginasPost[$unaPagina])) {
-            // Create post object
+         // Si la página guardada no está en options o no existe (porque el usuario la ha borrado)
+         if (!isset($paginasPost[$unaPagina]) || !get_page($paginasPost[$unaPagina]) ) {
+            // creamos la página con el shortcode como contenido.
             $my_post = array(
-              'post_title'    => $titulo,
-              'post_content'  => "[pcer_$unaPagina]",
-              'post_type'  => 'page',
-              'post_status'   => 'publish',
-              'post_author'   => 1
+               'post_title'    => $titulo
+              ,'post_content'  => "[pcer_$unaPagina]"
+              ,'post_type'  => 'page'
+              ,'post_status'   => 'publish'
+              ,'post_author'   => 1
+              ,'comment_status' => 'closed'
             );
             // Insert the post into the database
             $paginasPost[$unaPagina] = wp_insert_post( $my_post , $error);
-            var_dump($error);
-            var_dump($paginasPost);
          }// end if no existe mis documentos
        }//end Foreach
-       
        // Guardamos id's de las páginas del plugin.
        $debug = update_option(self::paginas_slug, $paginasPost);
-       var_dump('self::paginas_slug',self::paginas_slug);
-       var_dump($debug);
-
     }
     /**
      * 

@@ -7,12 +7,13 @@ Class SEJAS_AUX {
      */
     public static function parse($template,$placeholders)
     {
-        $resultado = '';
-        $tpl = file_get_contents($template.'.html');
+        $resultado = file_get_contents($template.'.html');
         // $tpl = get_template_part($template);
+
         foreach ($placeholders as $clave => $valor) {
-            $resultado = strtr($tpl , array('{{'.$clave.'}}' => $valor));
+            $resultado = strtr($resultado , array('{{'.$clave.'}}' => $valor));
         }
+        $resultado = preg_replace('/{{(.*)}}/','',$resultado);
         return $resultado;
     }
     /**
