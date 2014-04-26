@@ -36,19 +36,29 @@ function pcer_short_subir_documento ($atts, $content = null)
                     if (false === $wpdb->insert(PCER::tablaDocumentos(),
                                                     array('url_md5' => md5($clean['r_web_documento'])
                                                         ,'url' => $clean['r_web_documento'] 
+                                                        ,'csv' => time().md5($_dir_fehaciente) //temporal, luego se actualizar por el de verdad
                                                         ,'url_fehaciente' => $_dir_fehaciente
                                                         ,'home' => $clean['r_home']
                                                         ,'nombre' => $clean['r_nombre']
                                                         ,'fecha_alta' => date('Y-m-d H:i:s')
+                                                        ,'ip' => $_SERVER['REMOTE_ADDR']
                                                         ,'entidad_id' => $current_user->ID
                                                         ,'path' => $_path_archivo
                                                         ,'timestamp' => $timestamp
                                                         ,'hash_documento_sha1' => $hash_documento_sha1
-                                                        ,'deleted' => 0)) ){
+                                                        ,'deleted' => 0)
+                                                    )
+                                                ){
                                                                                                                 //La direccion fehaciente la ha completado  copiar_documento
                     $resultado .= '<h2>ERROR Interno Sentencia sql</h2>';
                     }else{
                     //OK, el documento fue insertado
+                    //TODO: actualizar csv, basado en un salt
+                    $wpdb->update(
+                        PCER::tablaDocumentos()
+                        ,array('csv' => PCER::dameCSV($wpdb->insert_id))
+                        ,array('id' => $wpdb->insert_id)
+                        );
                     $resultado .= '<h2>Documento añadido correctamente.</h2>'.'Su url es la siguiente: <a href="'.$_dir_fehaciente.'" target="_blank">'.$_dir_fehaciente.'</a>';                             
                     }//end if error en sentencia sql
 
@@ -148,7 +158,8 @@ function copiar_documento($url,$nombre_documento){
     global $current_user;
     global $nombre_usuario;//Es elegido en el header.
     global $_dir_fehaciente;
-    $nombre_usuario=strtr($nombre_usuario,array(' '=>'-'));
+    // $nombre_usuario=strtr($nombre_usuario,array(' '=>'-'));
+    $nombre_usuario = strtolower(strtr($current_user->user_login));
     $res=false;
     //si no existe la carpeta de la entidad -> la creamos
     $nombre_carpeta = "documentos/".$nombre_usuario.'/';

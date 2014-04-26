@@ -1,0 +1,59 @@
+<div class="post-content clearfix">
+    <form id="register" class="form" method="post" action="">
+        <ul>
+            <li id="li_1">
+                <label class="description" for="element_1">Nombre de la Entidad:</label>
+
+                <select name="r_nombre_entidad" onchange="">
+                    {{option_usuarios}}
+                </select>
+            </li>
+            <li id="li_2">
+                <label class="description" for="nombre_documento">Nombre del Documento:  </label>
+                <div>
+                    <input id="nombre_documento" name="r_nombre_documento" class="element text medium" type="text" maxlength="255" value="">
+                </div>
+            </li>
+            <li id="li_3">
+                <label class="description" for="nombre_documento">Mes:  </label><p></p>
+                <div>
+                    <input id="mes" name="r_mes" class="element text medium" type="text" maxlength="2" value="">
+                </div>
+                <label class="description" for="nombre_documento">Año:  </label>
+                <div>
+                    <input id="año" name="r_ano" class="element text medium" type="text" maxlength="4" value="">
+                </div>
+            </li>
+            <li class="buttons">
+                <input type="hidden" name="form_id" value="197821">
+                <input id="saveForm" class="button_text" type="submit" name="submit" value="Buscar">
+            </li>
+        </ul>
+    </form>
+    <table id="documento">
+        <thead>
+            <tr>
+                <th class="sortable sorted order2">
+                    <a href="">Documento</a>
+                </th>
+                <th class="sortable">
+                    <a href="">Entidad</a>
+                </th>
+                <th class="sortable">
+                    <a href="">URL Original</a>
+                </th>
+                <th class="sortable">
+                    <a href="">Publicado antes de:</a>
+                </th>
+                <th class="sortable">
+                    <a href="">URL Fehaciente</a>
+                </th>
+                <th>Comparar documentos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{buscar_documentos_fila}}
+        </tbody>
+    </table>
+    <p><!-- no-format off --></p>
+</div>

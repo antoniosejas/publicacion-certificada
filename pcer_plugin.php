@@ -2,9 +2,24 @@
 
 Class PCER {
     const my_prefix = "pc_";
-    const version = "1.0";
+    const version = "1.1";
     const version_slug = "pcer_version";
     const paginas_slug = "pcer_paginas";
+
+    /**
+     * Devuelve las páginas que se crearán y guardarán en options
+     * Estas son necesarias para cumplir con las funcionalidades de una publicación certificada.
+     */
+    private static function paginas()
+    {
+      // Cada una de las páginas tiene asociado un shortcode en la carpeta shortcodes del siguiente [tipo pcer_short_{{slug}}]
+      return array(
+        //titulo => // Slug
+         'Mis Documentos' => 'mis_documentos' // Permite
+        ,'Subir Documento' => 'subir_documento'
+        ,'Buscar Documentos' => 'buscar_documentos'
+      );
+    }
 
     private static function prefix()
     {
@@ -51,6 +66,7 @@ Class PCER {
        $sql = "CREATE TABLE " . $table_name . " (
                id bigint(20) NOT NULL AUTO_INCREMENT,
                entidad_id bigint(20) NOT NULL,
+               csv varchar(100) COLLATE utf8_spanish_ci NOT NULL,
                url_md5 varchar(32) COLLATE utf8_spanish_ci NOT NULL,
                url varchar(512) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
                url_fehaciente varchar(512) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
@@ -64,7 +80,8 @@ Class PCER {
                hash_documento_sha1 varchar(40) COLLATE utf8_spanish_ci NOT NULL,
                deleted tinyint(1) NOT NULL DEFAULT '0',
                versiones text COLLATE utf8_spanish_ci,
-               UNIQUE KEY id (id)
+               PRIMARY KEY id (id),
+               UNIQUE KEY csv (csv)
              );";
 
        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -75,19 +92,19 @@ Class PCER {
        // Creamos si no existen las páginas de mis_documentos, publicar_documento
        $paginasPost = get_option(self::paginas_slug,array());
 
-       $paginas = array('Mis Documentos' => 'mis_documentos', 'Subir Documento' => 'subir_documento');
+       $paginas = self::paginas();
 
        foreach ($paginas as $titulo => $unaPagina) {
          // Si la página guardada no está en options o no existe (porque el usuario la ha borrado)
          if (!isset($paginasPost[$unaPagina]) || !get_page($paginasPost[$unaPagina]) ) {
             // creamos la página con el shortcode como contenido.
             $my_post = array(
-               'post_title'    => $titulo
-              ,'post_content'  => "[pcer_$unaPagina]"
-              ,'post_type'  => 'page'
-              ,'post_status'   => 'publish'
-              ,'post_author'   => 1
-              ,'comment_status' => 'closed'
+               'post_title'      => $titulo
+              ,'post_content'    => "[pcer_$unaPagina]"
+              ,'post_type'       => 'page'
+              ,'post_status'     => 'publish'
+              ,'post_author'     => 1
+              ,'comment_status'  => 'closed'
             );
             // Insert the post into the database
             $paginasPost[$unaPagina] = wp_insert_post( $my_post , $error);
@@ -115,6 +132,15 @@ Class PCER {
         // Para ver los shortcodes públicos, ver README.md
         SEJAS_AUX::includeAll("shortcodes");
 
+    }
+
+    /**
+     * Devuelve el md5 de $id + un salt que fue genreado al instalar el plugin.
+     *
+     */
+    public static function dameCSV($id)
+    {
+      return md5($id.'variable');
     }
 }
 
