@@ -158,12 +158,25 @@ Class PCER {
       }
       return $args;
     }
-
+    public static function pcer_add_page_menu($output) {
+    $paginas = PCER::get_option_paginas();
+    foreach ($paginas as $slug => $pagina_id) {
+     if ('buscar_documentos' != $slug) {
+      $clase = (get_the_ID() == $pagina_id)?'current_page_item':'';
+       $output .= '<li class="'.$clase.'"><a href="'.get_permalink($pagina_id).'">'.get_the_title($pagina_id).'</a></li>'; 
+     }
+    }  
+    return $output;
+  }
     /**
      * Registra y guarda todos los items en el menú
      */
     public static function menus_register($value='')
     {
+      if( is_user_logged_in() ) {
+        // Sólo añadimos las páginas si el usuario está logueado.
+        add_filter('wp_list_pages', array('PCER', 'pcer_add_page_menu'));
+      }
 
       // // Menús
       // if ( has_nav_menu( 'primary' ) ) {

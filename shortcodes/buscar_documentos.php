@@ -46,7 +46,7 @@ function pcer_short_buscar_documentos ($atts, $content = null)
     } 
 
     $sql = "SELECT * FROM ".PCER::tablaDocumentos()." where nombre like '%$nombre_documento%' $andEntidad $andFecha and NOT deleted";
-    var_dump($sql);
+    // var_dump($sql);
     $buscar_documentos = $wpdb->get_results($sql);
 
     // Ponemos toda la lista de archivos

@@ -22,7 +22,6 @@ function pcer_short_subir_documento ($atts, $content = null)
                 //--
                 //Procedemos a la descarga
                 $existia_documento=$wpdb->get_results( "SELECT * FROM documentos where documentos.entidad_id = $current_user->ID and not documentos.deleted and documentos.url='".$clean['r_web_documento']."'");
-                 //DEBUG:var_dump($existia_documento);
                 if(empty($existia_documento)) {//el documento no existe -> intentamos copiarlo
                 $ultimo_id=$wpdb->get_var('SELECT id FROM documentos ORDER BY id DESC LIMIT 1');// OJO, se supone que en la Base de datos no se borra a pelo, simplemente se activa el bit 'deleted'
                     $nombre_documento=date('Y-m-d').strtr('-'.strtolower($clean['r_nombre']).'-',array(' '=>'-')).++$ultimo_id.'.pdf';
@@ -207,7 +206,6 @@ function comprobar_url_pdf($url){//return boolean
                 }
                 
                 //OK
-                //OKIMPORTANTE//var_dump($data);//DEBUG: info sobre
                 if (strpos($data,'application/pdf')>0){//Comprobamos que el documento EXISTE Y es un PDF.
                     fclose ( $fid );
                     $fid = fopen($url,'r');//fsockopen ( $scheme . $url_info ['host'], $port, $errno, $errstr, 30 );

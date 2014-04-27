@@ -1,10 +1,10 @@
 <div class="post-content clearfix">
-    <form id="register" class="form" method="post" action="">
+    <form id="buscar_documento" name="buscar_documento" class="form" method="post" action="">
         <ul>
             <li id="li_1">
                 <label class="description" for="r_nombre_entidad">Nombre de la Entidad:</label>
 
-                <select name="r_nombre_entidad" onchange="">
+                <select name="r_nombre_entidad" onchange=".form.submit();">
                     {{option_usuarios}}
                 </select>
             </li>
