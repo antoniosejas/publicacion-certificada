@@ -21,6 +21,13 @@ Class PCER {
       );
     }
 
+    /**
+     * Devielve el array de paginas creadas en base de datos
+     */
+    public static function get_option_paginas()
+    {
+      return get_option(self::paginas_slug,array());
+    }
     private static function prefix()
     {
         global $wpdb;
@@ -90,7 +97,7 @@ Class PCER {
 
 
        // Creamos si no existen las páginas de mis_documentos, publicar_documento
-       $paginasPost = get_option(self::paginas_slug,array());
+       $paginasPost = self::get_option_paginas();
 
        $paginas = self::paginas();
 
@@ -105,7 +112,11 @@ Class PCER {
               ,'post_status'     => 'publish'
               ,'post_author'     => 1
               ,'comment_status'  => 'closed'
+              ,'ping_status'  => 'closed'
             );
+            if ($unaPagina != 'buscar_documentos') {
+              $my_post['post_status'] = 'private';
+            }
             // Insert the post into the database
             $paginasPost[$unaPagina] = wp_insert_post( $my_post , $error);
          }// end if no existe mis documentos
