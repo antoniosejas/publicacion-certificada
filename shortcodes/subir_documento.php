@@ -36,7 +36,7 @@ function pcer_short_subir_documento ($atts, $content = null)
                     if (false === $wpdb->insert(PCER::tablaDocumentos(),
                                                     array('url_md5' => md5($clean['r_web_documento'])
                                                         ,'url' => $clean['r_web_documento'] 
-                                                        ,'csv' => time().md5($_dir_fehaciente) //temporal, luego se actualizar por el de verdad
+                                                        ,'csv' => 'temp_'.time().md5($_dir_fehaciente) //temporal, luego se actualizar por el de verdad
                                                         ,'url_fehaciente' => $_dir_fehaciente
                                                         ,'home' => $clean['r_home']
                                                         ,'nombre' => $clean['r_nombre']

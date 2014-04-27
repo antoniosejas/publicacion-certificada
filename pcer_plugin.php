@@ -131,7 +131,51 @@ Class PCER {
         // Incluimos todos los shortcodes
         // Para ver los shortcodes públicos, ver README.md
         SEJAS_AUX::includeAll("shortcodes");
+        
+        // Menús
+        self::menus_register();
 
+    }
+    /**
+     * Menú logueado, filter en loaded.
+     */
+    public static function pcer_nav_menu_args( $args = '' ) {         
+      if( is_user_logged_in() ) {
+          $args['menu'] = 'pc_logged';
+      } else {
+         // $args['menu'] = 'logged-out';
+      }
+      return $args;
+    }
+
+    /**
+     * Registra y guarda todos los items en el menú
+     */
+    public static function menus_register($value='')
+    {
+
+      // // Menús
+      // if ( has_nav_menu( 'primary' ) ) {
+      //      register_nav_menu( 'primary', 'Primary Navigation' );
+      // }
+      // register_nav_menu( 'pc_loggedin' , 'Usuarios logueados');
+
+      // // si está logueado cambiamos el menú principal 
+      // add_filter( 'wp_nav_menu_args', array('PCER', 'pcer_nav_menu_args') );
+
+      // $menu_name = 'pc_logged';
+      // // Si no existe el menú 'pc_loggedin'
+      // $menu_exists = wp_get_nav_menu_object( $menu_name );
+      // // Entonces lo creamos, y guardamos las páginas correspondientes
+      // if( !$menu_exists){
+      //     $menu_id = wp_create_nav_menu($menu_name);
+      //   // Set up default menu items
+      //     wp_update_nav_menu_item($menu_id, 0, array(
+      //         'menu-item-title' =>  __('Home'),
+      //         'menu-item-classes' => 'home',
+      //         'menu-item-url' => home_url( '/' ), 
+      //         'menu-item-status' => 'publish'));
+      // }
     }
 
     /**
