@@ -4,7 +4,7 @@
             <li id="li_1">
                 <label class="description" for="r_nombre_entidad">Nombre de la Entidad:</label>
 
-                <select name="r_nombre_entidad" onchange=".form.submit();">
+                <select name="r_nombre_entidad" onchange="document.buscar_documento.submit();">
                     {{option_usuarios}}
                 </select>
             </li>
@@ -22,7 +22,7 @@
             </li>
             <li class="buttons">
                 <input type="hidden" name="form_id" value="1097821">
-                <input id="saveForm" class="button_text" type="submit" name="submit" value="Buscar">
+                <input id="saveForm" class="button_text" type="submit" value="Buscar">
             </li>
         </ul>
     </form>
