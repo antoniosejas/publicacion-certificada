@@ -48,7 +48,7 @@ class PCERConfiguraciones{
 		add_action( 'admin_head', array('PCERConfiguraciones','admin_css') );
 		// Menú
 		add_menu_page('Publicaci&oacute;n Certificada', 'Publicaci&oacute;n Certificada', 'manage_options', 
-		    'rs_theme_settings', array('PCERConfiguraciones','configuracion_general'), self::plugin_url().'images/logo-publicacion-certificada-50.png');
+		    'pcer_settings', array('PCERConfiguraciones','configuracion_general'), self::plugin_url().'images/logo-publicacion-certificada-50.png');
 		
 		// add_submenu_page('pcer_theme_settings', 
 		//     'Galerías', 'Galerías', 'manage_options', 
@@ -63,10 +63,22 @@ class PCERConfiguraciones{
 	    if (!current_user_can('manage_options')) {
 	        wp_die('You do not have sufficient permissions to access this page.');
 	    }
-	    if (isset($_POST['envio'])) {
-	    	
+	    $placeholders = array();
+	    $placeholders['tsa_url'] = PCER::getTsaUrl();
+	    if (isset($_POST['tsa_url']) && "" != $_POST['tsa_url']) {
+	    	if (filter_var($_POST['tsa_url'], FILTER_VALIDATE_URL)) {
+	    		PCER::setTsaUrl($_POST['tsa_url']);
+	    		$placeholders['tsa_url'] = $_POST['tsa_url'];
+	    	}else{
+	    		$placeholders['tsa_url'] = $_POST['tsa_url'];
+	    		$placeholders['error_tsa_url'] = "Error en el formato de la url. Debe empezar por http://";
+	    	}
 	    }
-	    echo file_get_contents(self::plugin_path().'configuracion_general.html');
+	    include_once(PCERHOME.'/3161/timestamp.php');
+	    $placeholders['estado_tsa'] = (Timestamp::test())?'ok':'';
+
+	    $paginaconfiguraciones = self::plugin_path().'configuracion_general';
+	    echo SEJAS_AUX::parse($paginaconfiguraciones,$placeholders);
 	}
 
 	public static function plugin_url() {

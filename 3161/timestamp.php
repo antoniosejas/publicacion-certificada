@@ -222,7 +222,7 @@ class Timestamp
 
         //response_time == self::getTimestampFromAnswer($response['response_string']); //1299098823
 
-        $tsa_cert_chain_file = "chain.txt"; //from https://pki.pca.dfn.de/global-services-ca/pub/cacert/chain.txt
+        $tsa_cert_chain_file = dirname(__FILE__)."/chain.txt"; //from https://pki.pca.dfn.de/global-services-ca/pub/cacert/chain.txt
         $validate = self::validate($my_hash, $response['response_string'], $response['response_time'], $tsa_cert_chain_file); 
 
         if($validate){

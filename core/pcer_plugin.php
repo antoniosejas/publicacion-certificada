@@ -5,6 +5,8 @@ Class PCER {
     const version = "1.1";
     const version_slug = "pcer_version";
     const paginas_slug = "pcer_paginas";
+    const tsaurl_slug = "pcer_tsaurl";
+    const tsaurl_default = "http://zeitstempel.dfn.de";
 
     /**
      * Devuelve las páginas que se crearán y guardarán en options
@@ -73,6 +75,9 @@ Class PCER {
      */
     public static function pcer_install () {
       require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+      //Actualizamos 
+      self::setTsaUrl(tsaurl_default);
+
       // Creamos/Actualizamos la base de datos
       //Tabla Documentos
        $table_name = self::tablaDocumentos();
@@ -229,6 +234,20 @@ Class PCER {
     public static function dameCSV($id)
     {
       return md5($id.'variable');
+    }
+
+    public static function setTsaUrl($urlTsa)
+    {
+      echo "actualizando tsaurl: $urlTsa";
+      update_option(self::tsaurl_slug,  $urlTsa);
+    }
+    /**
+    * Devuelve la variable de la tabla options, si el campo está vacío, devuelve el valor por defecto.
+    **/
+    public static function getTsaUrl()
+    {
+      $tsa = get_option(self::tsaurl_slug);
+      return (""==$tsa)?self::tsaurl_default:$tsa;
     }
 }
 
