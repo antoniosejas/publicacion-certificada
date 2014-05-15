@@ -21,7 +21,7 @@ Class SEJAS_AUX {
      */
     public static function includeAll($folderName)
     {   
-        foreach (glob(PCER::directory()."$folderName/*.php") as $filename)
+        foreach (glob(PCERHOME."/$folderName/*.php") as $filename)
         {
             include_once($filename);
         }

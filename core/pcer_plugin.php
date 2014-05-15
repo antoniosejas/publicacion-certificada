@@ -38,14 +38,14 @@ Class PCER {
      */
     public static function directory()
     {
-      return dirname(__FILE__).'/';
+      return PCERHOME.'/';
     }
     /**
      * Devuelve el path absoluto hasta la carpeta views del plugin
      */
     public static function views()
     {
-      return dirname(__FILE__).'/views/';
+      return PCERHOME.'/views/';
     }
     public static function tablaDocumentos()
     {
@@ -160,6 +160,8 @@ Class PCER {
         // Incluimos todos los shortcodes
         // Para ver los shortcodes públicos, ver README.md
         SEJAS_AUX::includeAll("shortcodes");
+
+        SEJAS_AUX::includeAll("controllers");
         
         // Menús
         self::menus_register();

@@ -1,0 +1,51 @@
+<div class="wrap">  
+    <?php screen_icon('themes'); ?> <h2>Configuraci&oacute;n: Publciaci&oacute;n Certificada</h2>
+
+    <div id="estadoWrapper">
+        <h3>Estado general</h3>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        Estado del plugin:
+                    </td>
+                    <td>
+                         <span id="estadoCuadrado" class="ok">&nbsp;</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Estado de la tsa:
+                    </td>
+                    <td>
+                         <span id="estadoCuadrado" class="{{estado}}">&nbsp;</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div id="formularioTsaWrapper">
+        <h3>URL TSA</h3>
+        <form action="#">
+            <table>
+                <tbody><tr>
+                    <th>
+                        <label for="url_tsa">URL TSA <span class="description">(required)</span></label>
+                    </th>
+                    <td>
+                        <input id="url_tsa" name="url_tsa" type="url" placeholder="http://url.tsa.prueba/" value="{{url_tsa}}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+           <p class="submit">
+                <input type="submit" name="submit" id="submit" class="button button-primary" value="Update Profile">
+           </p>
+        </form>
+    </div>
+
+
+
+</div>

@@ -5,10 +5,13 @@ Plugin Name: Publicación Certificada
 Plugin URI: http://publicacion.sejas.es/
 Version: 1.0
 Author: Antonio Sejas
+Author URI: http://antonio.sejas.es/
 Description:  This plugin  adds functions and short codes for certificated publication, with timestamp RFC3161
 */
-include('pcer_plugin.php');
-include('sejas_aux.php');
+define(PCERHOME, dirname(__FILE__));
+include('core/sejas_aux.php');
+include('core/pcer_plugin.php');
+
 function pcer_install()
 {
   PCER::pcer_install();

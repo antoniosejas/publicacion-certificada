@@ -1,0 +1,9 @@
+#estadoCuadrado {
+    width: 20px;
+    height: 20px;
+    background: red;
+    display: inline-block;
+}
+#estadoCuadrado.ok {
+    background: green;
+}
