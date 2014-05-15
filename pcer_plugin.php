@@ -51,6 +51,10 @@ Class PCER {
     {
         return self::prefix(). "documentos"; 
     }
+    public static function tablaSellos()
+    {
+        return self::prefix(). "sellos"; 
+    }
     public static function registrarVersion()
     {
         update_option( self::version_slug, self::version );
@@ -68,7 +72,9 @@ Class PCER {
      * 
      */
     public static function pcer_install () {
+      require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
       // Creamos/Actualizamos la base de datos
+      //Tabla Documentos
        $table_name = self::tablaDocumentos();
        $sql = "CREATE TABLE " . $table_name . " (
                id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -91,8 +97,20 @@ Class PCER {
                UNIQUE KEY csv (csv)
              );";
 
-       require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-       $debug=dbDelta( $sql );
+       $debug = dbDelta( $sql );
+       
+       //Tabla sellos
+       $sql = "CREATE TABLE " . self::tablaSellos() . " (
+               id bigint(20) NOT NULL AUTO_INCREMENT,
+               id_documento bigint(20) NOT NULL,
+               fecha timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+               hash_documento_sha1 varchar(40) COLLATE utf8_spanish_ci NOT NULL,
+               timestamp text COLLATE utf8_spanish_ci,
+               deleted tinyint(1) NOT NULL DEFAULT '0',
+               PRIMARY KEY id (id)
+             );";
+
+       $debug = dbDelta( $sql );
        self::registrarVersion();
 
 
