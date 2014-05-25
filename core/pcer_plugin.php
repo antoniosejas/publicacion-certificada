@@ -2,7 +2,7 @@
 
 Class PCER {
     const my_prefix = "pc_";
-    const version = "1.1";
+    const version = "1.0";
     const version_slug = "pcer_version";
     const paginas_slug = "pcer_paginas";
     const tsaurl_slug = "pcer_tsaurl";
@@ -20,6 +20,7 @@ Class PCER {
          'Mis Documentos' => 'mis_documentos' // Permite
         ,'Subir Documento' => 'subir_documento'
         ,'Buscar Documentos' => 'buscar_documentos'
+        ,'Ver sellos' => 'ver_sellos'
       );
     }
 
@@ -68,7 +69,71 @@ Class PCER {
     {
         global $wpdb;
         $table_name = self::tablaDocumentos();
-        $wpdb->insert( $table_name, array( 'time' => current_time('mysql'), 'name' => $welcome_name, 'text' => $welcome_text ) );
+        $todoOk = $wpdb->insert( $table_name, array( 'time' => current_time('mysql'), 'name' => $welcome_name, 'text' => $welcome_text ) );
+        if (!$todoOk) {
+          $texto = "Error al guardar documento: ".var_export($parametros,true)."\n";
+          $texto .= "SQLERROR: ".$wpdb->last_error;
+          self::notificarError($id_documento,$texto);
+        }
+        return $todoOk;
+    }
+    /**
+      *
+      */
+    public static function getDocuments($where = '1=1')
+    {
+        global $wpdb;
+        $table_name = self::tablaDocumentos();
+        $resultados = $wpdb->get_results(
+          mysql_real_escape_string("SELECT * FROM $table_name WHERE $where")
+          );
+        return $resultados;
+    }
+    /**
+     *
+     */
+    public static function addSello($id_documento, $fecha, $sha1, $sello)
+    {
+        global $wpdb;
+        $table_name = self::tablaSellos();
+        $parametros = array( 'id_documento' => $id_documento, 'fecha' => $fecha, 'fecha_creacion' => current_time('mysql'), 'hash_documento_sha1' => $sha1, 'timestamp' => $sello, 'deleted' => 0 );
+        $todoOk = $wpdb->insert( $table_name, $parametros );
+        if (!$todoOk) {
+          $texto = "Error al guardar Sello: ".var_export($parametros,true)."\n";
+          $texto .= "SQLERROR: ".$wpdb->last_error;
+          self::notificarError($id_documento,$texto);
+        }
+        return $todoOk;
+    }
+    /**
+     *
+     */
+    public static function getSellos($id_documento)
+    {
+        global $wpdb;
+        $table_name = self::tablaSellos();
+        $resultados = $wpdb->get_results(
+          mysql_real_escape_string("SELECT * FROM $table_name WHERE id_documento = $id_documento")
+          );
+        return $resultados;
+    }
+    /**
+      *
+      */
+    public static function notificarError($id_documento, $texto)
+    {
+      var_export($texto);
+      $headers = '';
+      wp_mail( get_option('admin_email'), "[Publicacion Certificada] Error con documento $id_documento", $texto, $headers );
+    }
+    /**
+      *
+      */
+    public static function downloadDocument($url)
+    {
+      $documento_descargado = file_get_contents($url);
+      //TODO: posible mejora, descargarse el documento mediante curl, y sellar también las cabeceras
+      return $documento_descargado;
     }
     /**
      * 
@@ -76,7 +141,7 @@ Class PCER {
     public static function pcer_install () {
       require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
       //Actualizamos 
-      self::setTsaUrl(tsaurl_default);
+      self::setTsaUrl(self::tsaurl_default);
 
       // Creamos/Actualizamos la base de datos
       //Tabla Documentos
@@ -108,7 +173,8 @@ Class PCER {
        $sql = "CREATE TABLE " . self::tablaSellos() . " (
                id bigint(20) NOT NULL AUTO_INCREMENT,
                id_documento bigint(20) NOT NULL,
-               fecha timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+               fecha timestamp NOT NULL ,
+               fecha_creacion timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                hash_documento_sha1 varchar(40) COLLATE utf8_spanish_ci NOT NULL,
                timestamp text COLLATE utf8_spanish_ci,
                deleted tinyint(1) NOT NULL DEFAULT '0',
@@ -186,7 +252,7 @@ Class PCER {
     public static function pcer_add_page_menu($output) {
     $paginas = PCER::get_option_paginas();
     foreach ($paginas as $slug => $pagina_id) {
-     if ('buscar_documentos' != $slug) {
+     if ('buscar_documentos' != $slug && 'ver_sellos' != $slug) {
       $clase = (get_the_ID() == $pagina_id)?'current_page_item':'';
        $output .= '<li class="'.$clase.'"><a href="'.get_permalink($pagina_id).'">'.get_the_title($pagina_id).'</a></li>'; 
      }

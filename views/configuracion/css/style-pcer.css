@@ -7,3 +7,19 @@
 #estadoCuadrado.ok {
     background: green;
 }
+#tablaTsaForm {
+    width: 70%;
+}
+#tsa_url {
+    width: 100%;
+}
+
+#toplevel_page_pcer_settings .wp-menu-image img {
+    width: 30px;
+}
+
+@media screen and (max-width: 800px) {
+    #tablaTsaForm {
+        width: 100%;
+    }
+}

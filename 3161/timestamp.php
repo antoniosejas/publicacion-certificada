@@ -262,6 +262,9 @@ class Timestamp
             }
         }
         return $resultado;
-        
+    }
+    public static function getTimestampArray($tsa,$my_hash,$pub_cer = null)
+    {
+        return json_decode(self::getTimestamp($tsa,$my_hash,$pub_cer));
     }
 }

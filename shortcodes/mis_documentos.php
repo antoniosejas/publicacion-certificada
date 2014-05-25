@@ -25,7 +25,7 @@ function pcer_short_mis_documentos ($atts, $content = null)
                 ,'enlace_sello' => $documento->enlace_sello
                 ,'documento_fecha_alta' => $documento->fecha_alta
                 ,'documento_url_fehaciente' => $documento->url_fehaciente
-                ,'url_comparar' => $documento->url_fehaciente
+                ,'enlace_sellos' => $documento->url_fehaciente
             );
             $placeholders['mis_documentos_fila'] .= SEJAS_AUX::parse($tpl['fila'],$placeholdersFila);
          endforeach;//end foreach
